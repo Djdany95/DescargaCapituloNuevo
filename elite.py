@@ -1,3 +1,7 @@
+"""
+Si se programa como tarea, se ejecutara solo y nos dira lo que hay
+"""
+
 #urllib para la parte del web scrapping, msvcrt para dejar la ventana abierta, winsound para emitir un beep, os para hacer taskkill al cmd
 import urllib.request, msvcrt, winsound, os
 
