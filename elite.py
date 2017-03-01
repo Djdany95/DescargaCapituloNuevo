@@ -19,6 +19,9 @@ response=urllib.request.urlopen(request)
 #recogemos en la variable la respuesta leida que viene a ser el html de la pagina, en tipo Byte por lo que habra que castearlo a str despues
 data=response.read()
 
+#Imprime el dia y la hora
+print(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
+
 #Parte de busqueda, busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos a 1 para que no salte el ultimo if
 contadorCapitulo=0
 if str(data[0:14500]).find("theory")!=-1:
