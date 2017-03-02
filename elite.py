@@ -2,10 +2,10 @@
 Si se programa como tarea, se ejecutara solo y nos dira lo que hay
 """
 
-#urllib para la parte del web scrapping, msvcrt para dejar la ventana abierta, winsound para emitir un beep, os para hacer taskkill al cmd, time para la informacion de fecha y hora
-import urllib.request, msvcrt, winsound, os, time
+#urllib para la parte del web scrapping, winsound para emitir un beep, os para hacer taskkill al cmd, time para la informacion de fecha y hora
+import urllib.request, winsound, os, time
 
-#funcion para descargarnos el magnet del capitulo si esta disponible,recibe como parametro, la palabra clave de la serie
+#Funcion para descargarnos el magnet del capitulo si esta disponible,recibe como parametro, la palabra clave de la serie
 def descargarMagnet(busqueda):
 	#palabra a buscar, la clave de la serie que pasamos como parametro
 	buscar=busqueda
@@ -46,59 +46,20 @@ response=urllib.request.urlopen(request)
 #recogemos en la variable la respuesta leida que viene a ser el html de la pagina, en tipo Byte por lo que habra que castearlo a str despues y en UTF-8 (IMPORTANTISIMO)
 data=response.read().decode('utf-8')
 
-#Imprime el dia y la hora
-print(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
-
-#Parte de busqueda, busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos a 1 para que no salte el ultimo if
+#array de las series que sigo
+series=["the-big-bang-theory","mentes-criminales","puro-genio","elementary","codigo-negro","bones","legion","the-man-in-the-high-castle","goliath","ransom","big-little-lies","como-defender-a-un-asesino"]
 contadorCapitulo=0
-if str(data[0:14500]).find("theory")!=-1:
-	print("Nuevo capitulo de 'The Big Bang Theory'")
-	descargarMagnet("theory")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("mentes-criminales")!=-1:
-	print("Nuevo capitulo de 'Mentes Criminales'")
-	descargarMagnet("mentes-criminales")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("puro-genio")!=-1:
-	print("Nuevo capitulo de 'Puro Genio'")
-	descargarMagnet("puro-genio")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("elementary")!=-1:
-	print("Nuevo capitulo de 'Elementary'")
-	descargarMagnet("elementary")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("codigo-negro")!=-1:
-	print("Nuevo capitulo de 'Codigo Negro'")
-	descargarMagnet("codigo-negro")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("bones")!=-1:
-	print("Nuevo capitulo de 'Bones'")
-	descargarMagnet("bones")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("legion")!=-1:
-	print("Nuevo capitulo de 'Legion'")
-	descargarMagnet("legion")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("the-man-in-the-high-castle")!=-1:
-	print("Nuevo capitulo de 'The Man in the High Castle'")
-	descargarMagnet("the-man-in-the-high-castle")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("goliath")!=-1:
-	print("Nuevo capitulo de 'Goliath'")
-	descargarMagnet("goliath")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("ransom")!=-1:
-	print("Nuevo capitulo de 'Ransom'")
-	descargarMagnet("ransom")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("lies")!=-1:
-	print("Nuevo capitulo de 'Big Little Lies'")
-	descargarMagnet("big-little-lies")
-	contadorCapitulo+=1
-if str(data[0:14500]).find("como-defender-a-un-asesino")!=-1:
-	print("Nuevo capitulo de 'Como Defender a un Asesino'")
-	descargarMagnet("como-defender-a-un-asesino")
-	contadorCapitulo+=1
+
+#Guardamos la Fecha y la Hora
+fechaHora=(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
+
+#Parte de busqueda
+#busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
+for i in series:
+	if str(data[0:14500]).find(i)!=-1:
+		print("Nuevo capitulo de "+i)
+		descargarMagnet(i)
+		contadorCapitulo+=1
 
 #Si no encontro ningun capitulo, el contador nunca sube por lo tanto sigue en 0, pita y se cierra la ventana
 if contadorCapitulo==0:
@@ -106,6 +67,8 @@ if contadorCapitulo==0:
 	winsound.Beep(700,500) #Pitido para determinar que no encontro nada, 700 es la frecuencia del sonido(700=agudo) y 500 es el tiempo en ms(500=medio segundo)
 	os.system('taskkill /F /IM cmd.exe') #System de la libreria OS, ejecuta el comando de windows en este caso que le pases como parametro, en este caso cerrando la ventana del cmd
 
-#Para que no se cierre la ventana de la consola si encuentra algun capitulo
+#Si encuentra capitulo nos muestra que los descargo, espera 2 segundos y se cierra
 if contadorCapitulo>0:
-	msvcrt.getch() #Queda a la espera de que pulsemos una tecla
+	print("Capitulos nuevos descargados!")
+	time.sleep(2)
+	os.system('taskkill /F /IM cmd.exe') #System de la libreria OS, ejecuta el comando de windows en este caso que le pases como parametro, en este caso cerrando la ventana del cmd
