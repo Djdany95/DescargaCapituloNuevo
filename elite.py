@@ -83,5 +83,5 @@ if contadorCapitulo==0:
 #Si encuentra capitulo nos muestra que los descargo, espera 2 segundos y se cierra
 if contadorCapitulo>0:
 	print("Capitulos nuevos descargados!")
-	time.sleep(2)
+	time.sleep(5)
 	os.system('taskkill /F /IM cmd.exe') #System de la libreria OS, ejecuta el comando de windows en este caso que le pases como parametro, en este caso cerrando la ventana del cmd
