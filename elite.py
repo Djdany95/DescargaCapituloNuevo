@@ -3,14 +3,14 @@ Si se programa como tarea, se ejecutara solo y nos dira lo que hay
 """
 
 #urllib para la parte del web scrapping, winsound para emitir un beep, os para hacer taskkill al cmd, time para la informacion de fecha y hora
-import urllib.request, winsound, os, time
+import urllib.request, winsound, os, time, win32com
 
 #Funcion para descargarnos el magnet del capitulo si esta disponible,recibe como parametro, la palabra clave de la serie
 def descargarMagnet(busqueda):
 	#palabra a buscar, la clave de la serie que pasamos como parametro
 	buscar=busqueda
 	#primera ocurrencia de la palabra, buscada en el HTML, el -15 es una convencion de la web en concreto, recoge el primer valor del enlace al capitulo concreto
-	start_index=str(data[0:14500]).find(buscar)-15
+	start_index=str(data).find(buscar)-15
 	#+20 para llegar al final del enlace del capitulo concreto
 	last_index=start_index+len(buscar)+20
 	#crea el preenlace, sin el http://...., cortando la pagina por el primer y ultimo index
@@ -34,7 +34,7 @@ def descargarMagnet(busqueda):
 
 #funcion para saber el nombre del capitulo exacto para poner en el registro (nombre-serie-2x04)
 def getNombreCap(busqueda):
-	start_index=start_index=str(data[0:14500]).find(busqueda)
+	start_index=start_index=str(data).find(busqueda)
 	last_index=start_index+len(busqueda)+6
 	nombreCap=str(data[start_index:last_index])
 	return nombreCap
@@ -64,16 +64,16 @@ registroCapitulos=open("registro.txt","a")
 fechaHora=(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
 
 #Parte de busqueda
-#busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
+#busca la palabra clave en la primera pagina de la web, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
 for i in series:
-	if str(data[0:14500]).find(i)!=-1:
+	if str(data).find(i)!=-1:
 		if getNombreCap(i) not in open('registro.txt').read(): #busca el nombre del capitulo abriendo el registro.txt en modo lectura y leyendo linea a linea, si no esta, ejecuta el if
 			print(fechaHora+" Nuevo capitulo de "+i)
 			descargarMagnet(i)
 			registroCapitulos.writelines("\n"+fechaHora+" "+getNombreCap(i))
 			contadorCapitulo+=1
 registroCapitulos.close()
-			
+
 #Si no encontro ningun capitulo, el contador nunca sube por lo tanto sigue en 0, pita y se cierra la ventana
 if contadorCapitulo==0:
 	print("Nada nuevo!")
