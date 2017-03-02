@@ -3,7 +3,7 @@ Si se programa como tarea, se ejecutara solo y nos dira lo que hay
 """
 
 #urllib para la parte del web scrapping, winsound para emitir un beep, os para hacer taskkill al cmd, time para la informacion de fecha y hora
-import urllib.request, winsound, os, time, win32com
+import urllib.request, winsound, os, time
 
 #Funcion para descargarnos el magnet del capitulo si esta disponible,recibe como parametro, la palabra clave de la serie
 def descargarMagnet(busqueda):
@@ -64,13 +64,13 @@ registroCapitulos=open("registro.txt","a")
 fechaHora=(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
 
 #Parte de busqueda
-#busca la palabra clave en la primera pagina de la web, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
+#busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
 for i in series:
 	if str(data).find(i)!=-1:
 		if getNombreCap(i) not in open('registro.txt').read(): #busca el nombre del capitulo abriendo el registro.txt en modo lectura y leyendo linea a linea, si no esta, ejecuta el if
 			print(fechaHora+" Nuevo capitulo de "+i)
 			descargarMagnet(i)
-			registroCapitulos.writelines("\n"+fechaHora+" "+getNombreCap(i))
+			registroCapitulos.writelines("\n"+fechaHora+" "+getNombreCap(i)) #escribe en el registro la fecha y hora + el nombre del capitulo descargado
 			contadorCapitulo+=1
 registroCapitulos.close()
 
