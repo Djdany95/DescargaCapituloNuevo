@@ -32,6 +32,13 @@ def descargarMagnet(busqueda):
 	#al ser un archivo, no un enlace propiamente dicho, necesitamos que lo abra el Sistema Operativo, asi abrimos el archivo... ET VOILA!
 	os.startfile(magnet)
 
+#funcion para saber el nombre del capitulo exacto para poner en el registro (nombre-serie-2x04)
+def getNombreCap(busqueda):
+	start_index=start_index=str(data[0:14500]).find(busqueda)
+	last_index=start_index+len(busqueda)+6
+	nombreCap=str(data[start_index:last_index])
+	return nombreCap
+
 #Parte del Web Scrapping
 #definimos el user_agent para que la pagina nos detecte como un navegador y no como un script de python, puede ser cualquier user_agent
 user_agent='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
@@ -50,6 +57,9 @@ data=response.read().decode('utf-8')
 series=["the-big-bang-theory","mentes-criminales","puro-genio","elementary","codigo-negro","bones","legion","the-man-in-the-high-castle","goliath","ransom","big-little-lies","como-defender-a-un-asesino"]
 contadorCapitulo=0
 
+#guardamos en una variable el registro.txt abierto en modo append para poder escribir si hay capitulos nuevos
+registroCapitulos=open("registro.txt","a")
+
 #Guardamos la Fecha y la Hora
 fechaHora=(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
 
@@ -57,9 +67,11 @@ fechaHora=(time.strftime("%d/%m/%y")+" "+time.strftime("%H:%M:%S"))
 #busca la palabra clave en el trozo de codigo correspondiente a las 2 primeras columnas de la pagina aproximadamente, imprime por pantalla que lo encontro y sube el contador de capitulos, todo en un for que va iterando en las series
 for i in series:
 	if str(data[0:14500]).find(i)!=-1:
-		print("Nuevo capitulo de "+i)
-		descargarMagnet(i)
-		contadorCapitulo+=1
+		if getNombreCap(i) not in open('registro.txt').read(): #busca el nombre del capitulo abriendo el registro.txt en modo lectura y leyendo linea a linea, si no esta, ejecuta el if
+			print(fechaHora+" Nuevo capitulo de "+i)
+			descargarMagnet(i)
+			open('registro.txt','a').writelines("\n"+fechaHora+" "+getNombreCap(i))
+			contadorCapitulo+=1
 
 #Si no encontro ningun capitulo, el contador nunca sube por lo tanto sigue en 0, pita y se cierra la ventana
 if contadorCapitulo==0:
