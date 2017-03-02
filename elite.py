@@ -70,9 +70,10 @@ for i in series:
 		if getNombreCap(i) not in open('registro.txt').read(): #busca el nombre del capitulo abriendo el registro.txt en modo lectura y leyendo linea a linea, si no esta, ejecuta el if
 			print(fechaHora+" Nuevo capitulo de "+i)
 			descargarMagnet(i)
-			open('registro.txt','a').writelines("\n"+fechaHora+" "+getNombreCap(i))
+			registroCapitulos.writelines("\n"+fechaHora+" "+getNombreCap(i))
 			contadorCapitulo+=1
-
+registroCapitulos.close()
+			
 #Si no encontro ningun capitulo, el contador nunca sube por lo tanto sigue en 0, pita y se cierra la ventana
 if contadorCapitulo==0:
 	print("Nada nuevo!")
